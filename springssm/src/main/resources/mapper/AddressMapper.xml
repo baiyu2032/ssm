@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.dao.AddressDao">
+
+    <insert id="addLocal" parameterType="Address">
+        insert into address value(0,#{aname},#{phone},#{postcode},#{local},#{uid},#{adefault})
+    </insert>
+    <update id="updateLocal" parameterType="Address">
+        UPDATE address SET aname = #{aname},phone=#{phone},postcode=#{postcode},`local`=#{local}WHERE uid = #{uid} and aid= #{aid}
+    </update>
+    <delete id="delLocal" >
+        delete  from address  where uid = #{uid} and aid=#{aid}
+    </delete>
+    <select id="localCount" resultType="int" parameterType="int">
+        select count(1) from address where uid = #{uid}
+    </select>
+    <select id="selectlocal" resultType="cn.pojo.Address" parameterType="int">
+        select aid,aname,phone,postcode,local,adefault from address where uid = #{uid}
+    </select>
+    <select id="selLocal" resultType="cn.pojo.Address">
+        select aid,aname,phone,postcode,local,adefault from address where uid = #{uid} and aid = #{aid}
+    </select>
+
+</mapper>
