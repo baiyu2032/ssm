@@ -2,8 +2,7 @@ package cn.controller;
 
 import cn.pojo.Address;
 import cn.service.AddressmanageService;
-import cn.service.RedisService;
-import cn.util.RedisBaiseTakes;
+import cn.util.RedisUtil;
 import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
 
 @RequestMapping("address/")
 @Controller
@@ -34,22 +32,7 @@ public class AddressmanageContraller {
 
     @Autowired
     @Qualifier("seeUserRedisTakes")
-    private RedisBaiseTakes res;
-
-    public RedisBaiseTakes getRes() {
-        return this.res;
-    }
-
-    public void setRes(RedisBaiseTakes res) {
-        this.res = res;
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "addLocal.html",method = RequestMethod.POST)
-    @ApiOperation(value="新增地址",httpMethod="POST",notes="返回新增情况")
-    public String addlocal(@ApiParam(required = true, name ="address", value ="地址对象")@RequestBody Address address){
-        return local.addLocal(address);
-    }
+    private RedisUtil res;
 
 
     @ResponseBody
@@ -82,9 +65,21 @@ public class AddressmanageContraller {
     @ResponseBody
     @RequestMapping(value = "set",method = RequestMethod.GET)
     @ApiOperation(value="redis",httpMethod="GET",notes="返回查询情况")
-    public String ss(@RequestParam("s") String s,@RequestParam("a") String a){
-        res.add(s,a);
-        String s1 = res.get(s);
-        return JSON.toJSONString(s1);
+    public String redis(@RequestParam("key") String key,@RequestParam("value") String value){
+        boolean set = res.set(key, value);
+        String str;
+        if (set){
+            String qwe = (String)res.get(key);
+            str = JSON.toJSONString(qwe);
+        }else {
+            str = JSON.toJSONString("失败");
+        }
+        return str;
+    }
+    @ResponseBody
+    @RequestMapping("del")
+    public String redis(@RequestParam("key") String key){
+        res.del(key);
+        return "succces";
     }
 }
