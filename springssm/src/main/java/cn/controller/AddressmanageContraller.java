@@ -2,6 +2,9 @@ package cn.controller;
 
 import cn.pojo.Address;
 import cn.service.AddressmanageService;
+import cn.service.RedisService;
+import cn.util.RedisBaiseTakes;
+import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 @RequestMapping("address/")
 @Controller
@@ -26,6 +30,18 @@ public class AddressmanageContraller {
 
     public void setAddressmanageService(AddressmanageService addressmanageService) {
         this.local = addressmanageService;
+    }
+
+    @Autowired
+    @Qualifier("seeUserRedisTakes")
+    private RedisBaiseTakes res;
+
+    public RedisBaiseTakes getRes() {
+        return this.res;
+    }
+
+    public void setRes(RedisBaiseTakes res) {
+        this.res = res;
     }
 
     @ResponseBody
@@ -62,5 +78,13 @@ public class AddressmanageContraller {
     @ApiOperation(value="查找用户单条收货地址",httpMethod="GET",notes="返回查询情况")
     public String selLocalInfo(@ApiParam(required = true, name ="aid", value ="地址ID")@PathVariable("aid")int aid,@ApiParam(required = true, name ="uid", value ="用户ID")@PathVariable("uid")int uid){
         return local.selLoncalinfo(aid,uid);
+    }
+    @ResponseBody
+    @RequestMapping(value = "set",method = RequestMethod.GET)
+    @ApiOperation(value="redis",httpMethod="GET",notes="返回查询情况")
+    public String ss(@RequestParam("s") String s,@RequestParam("a") String a){
+        res.add(s,a);
+        String s1 = res.get(s);
+        return JSON.toJSONString(s1);
     }
 }
