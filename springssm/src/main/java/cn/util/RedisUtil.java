@@ -11,7 +11,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 
-@Component("seeUserRedisTakes")
+@Component("RedisTakes")
 public class RedisUtil {
 
     /**

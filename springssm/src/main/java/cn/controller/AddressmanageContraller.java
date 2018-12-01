@@ -31,7 +31,7 @@ public class AddressmanageContraller {
     }
 
     @Autowired
-    @Qualifier("seeUserRedisTakes")
+    @Qualifier("RedisTakes")
     private RedisUtil res;
 
 
@@ -76,10 +76,5 @@ public class AddressmanageContraller {
         }
         return str;
     }
-    @ResponseBody
-    @RequestMapping("del")
-    public String redis(@RequestParam("key") String key){
-        res.del(key);
-        return "succces";
-    }
+
 }
